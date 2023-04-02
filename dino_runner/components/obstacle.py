@@ -13,6 +13,7 @@ class Obstacle(Sprite):
 
         def update(self, game_speed):
             self.rect.x -= game_speed
+        
         def draw(self, screen):
             screen.blit(self.image[self.obstacle_type], (self.rect.x, self.rect.y))
 
