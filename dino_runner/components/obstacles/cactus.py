@@ -8,4 +8,4 @@ class Cactus(Obstacle):
         # self.type es como un indice
         self.type = random.randint(0, 2)
         super().__init__(image, self.type)
-        self.rect.y = 325
+        self.rect.y = self.Y_POS_CACTUS
