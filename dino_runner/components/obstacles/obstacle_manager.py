@@ -20,7 +20,7 @@ class ObstacleManager:
                 Cactus.Y_POS_CACTUS = 300
                 cactus = Cactus(LARGE_CACTUS)
                 self.obstacles.append(cactus)
-            elif self.typeobstacle == 2: # 2
+            else: # 2
                 Bird.Y_POS_BIRD = random.randint(100, 300)
                 bird = Bird(BIRD)
                 self.obstacles.append(bird)
@@ -29,8 +29,12 @@ class ObstacleManager:
             obstacle.update(game.game_speed, self.obstacles)
             if game.player.dino_rect.colliderect(obstacle.rect):
                 game.playing = False
+                game.death_count += 1
                 break
 
     def draw(self, screen):
         for obstacle in self.obstacles:
             obstacle.draw(screen)
+    
+    def reset_obstacles(self):
+        self.obstacles = []
