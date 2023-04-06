@@ -3,9 +3,10 @@ from dino_runner.components.counter import Counter
 from dino_runner.components.menu import Menu
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 
-from dino_runner.utils.constants import BG, FONT_STYLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS
+from dino_runner.utils.constants import BG, FONT_STYLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE
 from dino_runner.components.dinosaur import Dinosour
 from dino_runner.components.power_ups.power_up_manager import PowerUpManeger
+
 
 class Game:
     GAME_SPEED = 20
@@ -55,6 +56,8 @@ class Game:
     def update(self):
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
+        #self.power_up_manager.throwR(user_input) #
+        self.obstacle_manager.throwF(user_input)
         self.obstacle_manager.update(self)
         self.update_score()
         self.power_up_manager.update(self)
@@ -67,6 +70,7 @@ class Game:
         self.obstacle_manager.draw(self.screen)
         self.score.draw(self.screen)
         self.power_up_manager.draw(self.screen)
+        self.draw_power_up()
         pygame.display.update()
         pygame.display.flip()
 
@@ -97,7 +101,7 @@ class Game:
     def update_score(self):
         self.score.update()
         if self.score.count % 100 == 0 and self.game_speed < 500:
-            self.game_speed += 5
+            self.game_speed += 1 # 1 ------5
 
     def update_highest_score(self):
         if self.score.count > self.highest_score.count:
@@ -108,3 +112,13 @@ class Game:
         self.score.reset()
         self.game_speed = self.GAME_SPEED
         self.player.reset()
+        self.power_up_manager.reset_power_ups()
+        
+    def draw_power_up(self):
+        if self.player.has_power_up:
+            time_to_show = round((self.player.power_up_time - pygame.time.get_ticks())/1000, 2)
+            if time_to_show >= 0:
+                self.menu.draw(self.screen, f'{self.player.type.capitalize()} enabled for {time_to_show} seconds', 500, 50)
+            else:
+                self.player.has_power_up = False
+                self.player.type = DEFAULT_TYPE
